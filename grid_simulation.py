@@ -28,6 +28,8 @@ SLACK_VOLTAGE_PU = 1.02     # Tension de consigne à la centrale (en p.u.)
 
 def build_network() -> pp.pandapowerNet:
     """Construit le réseau minimal : 1 générateur, 1 ligne, 1 charge."""
+    
+    
     net = pp.create_empty_network(name="mvp_grid")
 
     bus_plant = pp.create_bus(net, vn_kv=20.0, name="Centrale (Slack)")
@@ -89,3 +91,15 @@ if __name__ == "__main__":
     solve_power_flow(net)
     scada_payload = export_scada_data(net)
     print(json.dumps(scada_payload, indent=2, ensure_ascii=False))
+    
+    # ← AJOUTE CES LIGNES POUR VOIR LES PARAMÈTRES
+    line_std = pp.load_std_type(net, LINE_STD_TYPE, "line")
+    print(f"Paramètres de '{LINE_STD_TYPE}':")
+    print(f"  r_ohm_per_km = {line_std['r_ohm_per_km']}")
+    print(f"  x_ohm_per_km = {line_std['x_ohm_per_km']}")
+    print(f"  c_nf_per_km = {line_std['c_nf_per_km']}")
+    print(f"  max_i_ka = {line_std['max_i_ka']}")
+    
+    
+
+    
